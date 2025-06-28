@@ -1,4 +1,4 @@
-# DnD Sharp
+# DnDSharp
 This repository contains an implementation of DnD 5e Mechanics based on SRD 5.2.1 for CSharp.
 
 ## Based on the System Reference Document 5.2.1

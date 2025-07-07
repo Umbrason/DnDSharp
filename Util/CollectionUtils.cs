@@ -7,13 +7,13 @@ namespace DnDSharp
             if (dictionary.TryGetValue(key, out var value)) return value;
             return dictionary[key] = (creator ?? Activator.CreateInstance<V>).Invoke();
         }
-        public static void AddGroupElement<K, V, C>(this IDictionary<K, C> dictionary, K key, V value) where C : ICollection<V>
+        public static void Add<K, V, C>(this IDictionary<K, C> dictionary, K key, V value) where C : ICollection<V>
         {
             var group = dictionary.GetOrAdd(key);
             group.Add(value);
         }
 
-        public static void RemoveGroupElement<K, V, C>(this IDictionary<K, ICollection<V>> dictionary, K key, V value) where C : ICollection<V>
+        public static void Remove<K, V, C>(this IDictionary<K, C> dictionary, K key, V value) where C : ICollection<V>
         {
             if (!dictionary.ContainsKey(key)) return;
             var group = dictionary.GetOrAdd(key);

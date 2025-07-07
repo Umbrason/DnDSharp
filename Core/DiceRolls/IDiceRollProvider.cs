@@ -10,13 +10,11 @@ namespace DnDSharp.Core
             var opSign = Math.Sign(reRolls);
             reRolls *= opSign;
             int[] rolls = new int[reRolls + 1];
-            int roll = Roll(dice, context);
-            for (int i = 0; i < reRolls; i++)
-            {
-                var reRoll = Roll(dice, context);
-                if (reRoll * opSign > roll * opSign) roll = reRoll;
-            }
-            return new(rolls, roll, roll == 20 || roll == 1);
+            rolls[0] = Roll(dice, context);
+            for (int i = 1; i <= reRolls; i++)
+                rolls[i] = Roll(dice, context);
+            int rollPicker(int[] rolls) => rolls.Aggregate((a, b) => (a * opSign < b * opSign) ? a : b);
+            return new(rolls, rollPicker);
         }
     }
 }

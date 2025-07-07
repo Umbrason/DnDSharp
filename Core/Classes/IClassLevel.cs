@@ -2,7 +2,8 @@ namespace DnDSharp.Core
 {
     public interface IClassLevel
     {
-        ClassID classID { get; }
+        ClassID ClassID { get; }
+        int LevelID { get; }
         void OnAdded(Character character);
         void OnRemoved(Character character);
     }

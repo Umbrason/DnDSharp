@@ -1,8 +1,10 @@
+using DnDSharp.Vanilla;
+
 namespace DnDSharp.Core
 {
     public class Character : Entity
     {
-        public Character(IReadOnlyDictionary<AbilityID, int> abilityScores, int baseHitPoints, IReadOnlyDictionary<DamageElementID, int>  damageMultipliers, int baseArmorClass, AbilityID armorClassBonusAbility, AbilityID initiativeBonusAbility, IReadOnlyDictionary<ResourceID, int> baseResources, GroupID groupAlignment) : base(baseHitPoints, baseArmorClass, damageMultipliers)
+        public Character(IReadOnlyDictionary<AbilityID, int> abilityScores, int baseHitPoints, IReadOnlyDictionary<DamageElementID, int> damageMultipliers, int baseArmorClass, AbilityID armorClassBonusAbility, AbilityID initiativeBonusAbility, IReadOnlyDictionary<ResourceID, int> baseResources, GroupID groupAlignment, ICharacterLevelProvider levelProvider) : base(baseHitPoints, baseArmorClass, damageMultipliers)
         {
             foreach (var (abilityID, score) in abilityScores)
             {
@@ -24,61 +26,77 @@ namespace DnDSharp.Core
                 m_Resources[resourceID] = new(capacity, capacity);
 
             GroupAlignment = groupAlignment;
+            LevelProvider = levelProvider;
+
+            Activities = new LazyDictionary<ActivityGroupID, HashSet<IActivity>>();
         }
 
-        private Dictionary<AbilityID, ModifyableValue<int>> m_AbilityScores = [];
-        private Dictionary<AbilityID, ModifyableValue<int>> m_AbilityModifiers = [];
-        private Dictionary<AbilityID, ModifyableValue<int>> m_SavingThrows = [];
-        private Dictionary<AbilityID, ModifyableValue<int>> m_MeleeWeaponAttacks = [];
-        private Dictionary<AbilityID, ModifyableValue<int>> m_RangedWeaponAttacks = [];
-        private Dictionary<AbilityID, ModifyableValue<int>> m_SpellAttacks = [];
-        private Dictionary<AbilityID, ModifyableValue<int>> m_SpellSaveDCs = [];
-        private Dictionary<SkillID, CappedValue<int>> m_SkillProficiencies = [];
-        private Dictionary<AbilityID, CappedValue<int>> m_SavingThrowProficiencies = [];
-        private Dictionary<EquipmentTypeID, CappedValue<int>> m_EquipmentProficiencies = [];
-        private Dictionary<ResourceID, CappedValue<int>> m_Resources = [];
-
+        #region AbilityScores
+        private readonly Dictionary<AbilityID, ModifyableValue<int>> m_AbilityScores = [];
         public IReadOnlyDictionary<AbilityID, ModifyableValue<int>> AbilityScores => m_AbilityScores;
+        private readonly Dictionary<AbilityID, ModifyableValue<int>> m_AbilityModifiers = [];
         public IReadOnlyDictionary<AbilityID, ModifyableValue<int>> AbilityModifiers => m_AbilityModifiers;
+        private readonly Dictionary<AbilityID, ModifyableValue<int>> m_SavingThrows = [];
         public IReadOnlyDictionary<AbilityID, ModifyableValue<int>> SavingThrows => m_SavingThrows;
+        private readonly Dictionary<AbilityID, ModifyableValue<int>> m_MeleeWeaponAttacks = [];
         public IReadOnlyDictionary<AbilityID, ModifyableValue<int>> MeleeWeaponAttacks => m_MeleeWeaponAttacks;
+        private readonly Dictionary<AbilityID, ModifyableValue<int>> m_RangedWeaponAttacks = [];
         public IReadOnlyDictionary<AbilityID, ModifyableValue<int>> RangedWeaponAttacks => m_RangedWeaponAttacks;
+        private readonly Dictionary<AbilityID, ModifyableValue<int>> m_SpellAttacks = [];
         public IReadOnlyDictionary<AbilityID, ModifyableValue<int>> SpellAttacks => m_SpellAttacks;
+        private readonly Dictionary<AbilityID, ModifyableValue<int>> m_SpellSaveDCs = [];
         public IReadOnlyDictionary<AbilityID, ModifyableValue<int>> SpellSaveDCs => m_SpellSaveDCs;
+        #endregion
+
+        #region Proficiency
+        public ModifyableValue<int> ProficiencyBonus { get; private set; }
+        private readonly Dictionary<SkillID, CappedValue<int>> m_SkillProficiencies = [];
         public IReadOnlyDictionary<SkillID, CappedValue<int>> SkillProficiencies => m_SkillProficiencies; //0, 1, 2
+        private readonly Dictionary<AbilityID, CappedValue<int>> m_SavingThrowProficiencies = [];
         public IReadOnlyDictionary<AbilityID, CappedValue<int>> SavingThrowProficiencies => m_SavingThrowProficiencies; //0, 1, 2
+        private readonly Dictionary<EquipmentTypeID, CappedValue<int>> m_EquipmentProficiencies = [];
         public IReadOnlyDictionary<EquipmentTypeID, CappedValue<int>> EquipmentProficiencies => m_EquipmentProficiencies; //0, 1, 2
+        #endregion
+
+        public ModifyableValue<int> InitiativeBonus { get; private set; } //derives from a specific AbilityModifier
+        public ModifyableValue<int> ArmorClassBonus { get; private set; } //derives from a specific AbilityModifier
+
+        private readonly Dictionary<ResourceID, CappedValue<int>> m_Resources = [];
         public IReadOnlyDictionary<ResourceID, CappedValue<int>> Resources => m_Resources;
 
-        public ModifyableValue<int> ProficiencyBonus { get; private set; }
-        public ModifyableValue<int> CharacterLevel { get; private set; }
-
-        public ModifyableValue<int> InitiativeBonus { get; private set; } //derives from AbilityModifiers
-        public ModifyableValue<int> ArmorClassBonus { get; private set; } //derives from AbilityModifiers
 
         public GroupID GroupAlignment { get; private set; }
 
-        private Dictionary<ClassID, List<IClassLevel>> m_ClassLevels = [];
+        #region Classes
+        public ICharacterLevelProvider LevelProvider { get; private set; }
+        private readonly Dictionary<ClassID, List<IClassLevel>> m_ClassLevels = [];
         public IReadOnlyDictionary<ClassID, List<IClassLevel>> ClassLevels => m_ClassLevels;
+        public ModifyableValue<int> CharacterLevel { get; private set; }
 
         public int GetClassLevel(ClassID classID) => ClassLevels.GetValueOrDefault(classID)?.Count ?? 0;
         public void AddClassLevel(IClassLevel level)
         {
-            var classID = level.classID;
+            var classID = level.ClassID;
             ClassLevels[classID].Add(level);
             CharacterLevel.Base += 1;
         }
+        #endregion
 
+        #region Combat
         public void BeginTurn() => OnBeginTurn?.Invoke();
         public event Action? OnBeginTurn;
         public void EndTurn() => OnEndTurn?.Invoke();
         public event Action? OnEndTurn;
+        #endregion
+
+        #region Resting 
         public void ShortRest() => OnShortRest?.Invoke();
         public event Action? OnShortRest;
         public void LongRest() => OnLongRest?.Invoke();
         public event Action? OnLongRest;
+        #endregion
 
-        #region Rolling
+        #region Dice Rolling
         public Action<DiceRollResult>? OnRollInitiative;
         public DiceRollResult RollInitiative(int reRolls = 0)
         {
@@ -158,6 +176,10 @@ namespace DnDSharp.Core
         public Action<DiceRollResult>? OnRollMeleeDamage;
         public DamageRollResult RollMeleeDamage(DamageRollDescription damageDescription, int reRolls)
             => RollDamage(damageDescription, OnRollMeleeDamage, reRolls);
+        #endregion
+
+        #region Activities 
+        public Dictionary<ActivityGroupID, HashSet<IActivity>> Activities { get; private set; }
         #endregion
     }
 }

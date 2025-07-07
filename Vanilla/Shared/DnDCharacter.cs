@@ -5,7 +5,7 @@ namespace DnDSharp.Vanilla
     public class DnDCharacter : Character
     {
         private static readonly Dictionary<ResourceID, int> BaseResources = new() { { Resource.ACTION, 1 }, { Resource.BONUS_ACTION, 1 }, { Resource.REACTION, 1 } };
-        public DnDCharacter(IReadOnlyDictionary<AbilityID, int> abilityScores, int baseHitPoints, IReadOnlyDictionary<DamageElementID, int> damageMultipliers, int baseArmorClass, GroupID groupAlignment) : base(abilityScores, baseHitPoints, damageMultipliers, baseArmorClass, Ability.DEXTERITY, Ability.DEXTERITY, BaseResources, groupAlignment)
+        public DnDCharacter(IReadOnlyDictionary<AbilityID, int> abilityScores, int baseHitPoints, IReadOnlyDictionary<DamageElementID, int> damageMultipliers, int baseArmorClass, GroupID groupAlignment) : base(abilityScores, baseHitPoints, damageMultipliers, baseArmorClass, Ability.DEXTERITY, Ability.DEXTERITY, BaseResources, groupAlignment, new EXPCurveLevelProvider())
         {
             this.OnBeginTurn += RestoreBaseResources;
             this.OnShortRest += RestoreHitpointsOnShortRest;

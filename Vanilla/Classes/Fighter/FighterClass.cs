@@ -4,13 +4,14 @@ namespace DnDSharp.Vanilla
 {
     public partial class Fighter : IClass
     {
-        public static ClassID ClassID => Class.Fighter;
+        public ClassID ClassID => Class.Fighter;
         public readonly static ActivityGroupID ActivityGroup = new(nameof(Fighter));
-        public IClassLevel GetClassLevel(int index)
+        public IClassLevel GetClassLevelBuilder(int index)
         => index switch
         {
             1 => new Level1(),
             2 => new Level2(),
+            3 => new Level3(),
             _ => throw new NotImplementedException($"{ClassID.ID} does not implement level {index}")
         };
     }

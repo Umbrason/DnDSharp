@@ -1,8 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using DnDSharp.Core;
-using DnDSharp.Vanilla;
-
-
 
 /*
 
@@ -16,13 +13,13 @@ ok this is the plan:
 1. determine available subclasses if is abstract IClassLevel
 2. read option metadata from ctor parameter attributes (i.e. [Options(Wizard.Spelllist(1).Concat(Wizard.Spelllist(2)))]IActivity[] spells) 
 */
-public class ClassLevelGenerator<T> where T : IClassLevel
+public class ClassLevelGenerator<T>
 {
     public ClassLevelGenerator([NotNull()]int value)
     {
         if (typeof(T).IsAbstract)
         {
-
+            //is subclass
         }
     }
 

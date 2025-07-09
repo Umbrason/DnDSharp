@@ -29,6 +29,7 @@ namespace DnDSharp.Core
             LevelProvider = levelProvider;
 
             Activities = new LazyDictionary<ActivityGroupID, HashSet<IActivity>>();
+            m_ClassLevels = new LazyDictionary<ClassID, List<IClassLevel>>();
         }
 
         #region AbilityScores
@@ -69,14 +70,18 @@ namespace DnDSharp.Core
 
         #region Classes
         public ICharacterLevelProvider LevelProvider { get; private set; }
-        private readonly Dictionary<ClassID, List<IClassLevel>> m_ClassLevels = [];
+        private readonly Dictionary<ClassID, IClass> m_Classes = [];
+        public IReadOnlyDictionary<ClassID, IClass> Classes => m_Classes;
+        private readonly Dictionary<ClassID, List<IClassLevel>> m_ClassLevels;
         public IReadOnlyDictionary<ClassID, List<IClassLevel>> ClassLevels => m_ClassLevels;
         public ModifyableValue<int> CharacterLevel { get; private set; }
 
         public int GetClassLevel(ClassID classID) => ClassLevels.GetValueOrDefault(classID)?.Count ?? 0;
-        public void AddClassLevel(IClassLevel level)
+        public void AddClassLevel(IClass @class)
         {
-            var classID = level.ClassID;
+            m_Classes[@class.ClassID] = @class;
+            var classID = @class.ClassID;
+            var level = @class.GetClassLevelBuilder(ClassLevels[classID].Count + 1);
             ClassLevels[classID].Add(level);
             CharacterLevel.Base += 1;
         }

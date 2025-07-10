@@ -2,7 +2,7 @@ using DnDSharp.Core;
 
 namespace DnDSharp.Vanilla
 {
-    public partial class Fighter : IClass
+    public partial class Fighter : IClassLevelProvider
     {
         public ClassID ClassID => Class.Fighter;
         public readonly static ActivityGroupID ActivityGroup = new(nameof(Fighter));

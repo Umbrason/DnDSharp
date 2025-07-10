@@ -70,18 +70,23 @@ namespace DnDSharp.Core
 
         #region Classes
         public ICharacterLevelProvider LevelProvider { get; private set; }
-        private readonly Dictionary<ClassID, IClass> m_Classes = [];
-        public IReadOnlyDictionary<ClassID, IClass> Classes => m_Classes;
+        private readonly Dictionary<ClassID, IClassLevelProvider> m_ClassLevelProvider = [];
+        public IReadOnlyDictionary<ClassID, IClassLevelProvider> ClassLevelProvider => m_ClassLevelProvider;
         private readonly Dictionary<ClassID, List<IClassLevel>> m_ClassLevels;
         public IReadOnlyDictionary<ClassID, List<IClassLevel>> ClassLevels => m_ClassLevels;
         public ModifyableValue<int> CharacterLevel { get; private set; }
 
-        public int GetClassLevel(ClassID classID) => ClassLevels.GetValueOrDefault(classID)?.Count ?? 0;
-        public void AddClassLevel(IClass @class)
+        public void SetSubclass(ClassID classID, IClassLevelProvider classLevelProvider)
         {
-            m_Classes[@class.ClassID] = @class;
-            var classID = @class.ClassID;
-            var level = @class.GetClassLevelBuilder(ClassLevels[classID].Count + 1);
+            m_ClassLevelProvider[classID] = classLevelProvider;
+        }
+
+        public int GetClassLevel(ClassID classID) => ClassLevels.GetValueOrDefault(classID)?.Count ?? 0;
+        public void AddClassLevel(IClassLevel level)
+        {
+            var classID = level.ClassID;
+            if (level.LevelID > GetClassLevel(classID) + 1) throw new Exception($"Cannot add {classID.ID} level {level.LevelID}. Missing previous level(s) for class {classID.ID} with current level {GetClassLevel(classID)}");
+            if (level.LevelID <= GetClassLevel(classID)) throw new Exception($"Cannot add {classID.ID} level {level.LevelID}. Class {classID.ID} is already at level {GetClassLevel(classID)}");
             ClassLevels[classID].Add(level);
             CharacterLevel.Base += 1;
         }

@@ -2,17 +2,9 @@ using DnDSharp.Core;
 
 namespace DnDSharp.Vanilla
 {
-    public partial class Fighter : IClassLevelProvider
+    public partial class Fighter
     {
         public ClassID ClassID => Class.Fighter;
         public readonly static ActivityGroupID ActivityGroup = new(nameof(Fighter));
-        public IClassLevel GetClassLevelBuilder(int index)
-        => index switch
-        {
-            1 => new Level1(),
-            2 => new Level2(),
-            3 => new Level3(),
-            _ => throw new NotImplementedException($"{ClassID.ID} does not implement level {index}")
-        };
     }
 }

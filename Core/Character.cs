@@ -1,5 +1,3 @@
-using DnDSharp.Vanilla;
-
 namespace DnDSharp.Core
 {
     public class Character : Entity
@@ -28,8 +26,8 @@ namespace DnDSharp.Core
             GroupAlignment = groupAlignment;
             LevelProvider = levelProvider;
 
-            Activities = new LazyDictionary<ActivityGroupID, HashSet<IActivity>>();
-            m_ClassLevels = new LazyDictionary<ClassID, List<IClassLevel>>();
+            m_Activities = [];
+            m_ClassLevels = [];
         }
 
         #region AbilityScores
@@ -70,16 +68,9 @@ namespace DnDSharp.Core
 
         #region Classes
         public ICharacterLevelProvider LevelProvider { get; private set; }
-        private readonly Dictionary<ClassID, IClassLevelProvider> m_ClassLevelProvider = [];
-        public IReadOnlyDictionary<ClassID, IClassLevelProvider> ClassLevelProvider => m_ClassLevelProvider;
-        private readonly Dictionary<ClassID, List<IClassLevel>> m_ClassLevels;
+        private readonly LazyDictionary<ClassID, List<IClassLevel>> m_ClassLevels;
         public IReadOnlyDictionary<ClassID, List<IClassLevel>> ClassLevels => m_ClassLevels;
         public ModifyableValue<int> CharacterLevel { get; private set; }
-
-        public void SetSubclass(ClassID classID, IClassLevelProvider classLevelProvider)
-        {
-            m_ClassLevelProvider[classID] = classLevelProvider;
-        }
 
         public int GetClassLevel(ClassID classID) => ClassLevels.GetValueOrDefault(classID)?.Count ?? 0;
         public void AddClassLevel(IClassLevel level)
@@ -189,7 +180,8 @@ namespace DnDSharp.Core
         #endregion
 
         #region Activities 
-        public Dictionary<ActivityGroupID, HashSet<IActivity>> Activities { get; private set; }
+        private readonly LazyDictionary<ActivityGroupID, HashSet<IActivity>> m_Activities;
+        public IReadOnlyDictionary<ActivityGroupID, HashSet<IActivity>> Activities => m_Activities;
         #endregion
     }
 }

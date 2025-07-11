@@ -6,8 +6,10 @@ namespace DnDSharp.Vanilla
     {
         public abstract class Level3 : IClassLevel
         {
-            public ClassID ClassID => Class.Fighter;
-            public int LevelID => 3;
+            public static ClassID ClassID => Class.Fighter;
+            public static int LevelID => 3;
+            ClassID IClassLevel.ClassID => ClassID;
+            int IClassLevel.LevelID => LevelID;
             public virtual void OnAdded(Character character) { }
             public virtual void OnRemoved(Character character) { }
         }

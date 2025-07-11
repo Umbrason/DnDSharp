@@ -4,5 +4,6 @@ namespace DnDSharp.Core
     {
         public ActivityGroupID? ParentGroup { get; private set; } = parentGroup;
         public string ID { get; private set; } = identifier;
+        public override string ToString() => ParentGroup == null ? ID : $"{ParentGroup}.{ID}";
     }
 }

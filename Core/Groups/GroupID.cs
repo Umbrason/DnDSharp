@@ -1,11 +1,11 @@
 namespace DnDSharp.Core
 {
-    public class GroupID(string id, List<GroupID> allied, List<GroupID> opposing, GroupID? parentGroup = null)
+    public class GroupID(string id, List<GroupID>? allied = null, List<GroupID>? opposing = null, GroupID? parentGroup = null)
     {
         public string ID { get; } = id;
         public GroupID? ParentGroup { get; } = parentGroup;
-        public List<GroupID> Allied = allied;
-        public List<GroupID> Opposing = opposing;
+        public List<GroupID> Allied = allied ?? [];
+        public List<GroupID> Opposing = opposing ?? [];
 
         public enum GroupRelationship
         {
@@ -26,5 +26,6 @@ namespace DnDSharp.Core
             if (ParentGroup != null) return ParentGroup.RelationshipWith(other);
             return GroupRelationship.Neutral;
         }
+        public override string ToString() => ID;
     }
 }

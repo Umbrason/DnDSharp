@@ -6,8 +6,10 @@ namespace DnDSharp.Vanilla
     {
         public class Level2 : IClassLevel
         {
-            public ClassID ClassID => Class.Fighter;
-            public int LevelID => 2;
+            public static ClassID ClassID => Class.Fighter;
+            public static int LevelID => 2;
+            ClassID IClassLevel.ClassID => ClassID;
+            int IClassLevel.LevelID => LevelID;
             public void OnAdded(Character character) { }
             public void OnRemoved(Character character) { }
         }

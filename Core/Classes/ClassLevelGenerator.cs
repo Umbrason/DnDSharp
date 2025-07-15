@@ -69,7 +69,7 @@ namespace DnDSharp.Core
                 if (levelTypeCandidates.Length == 0) throw new NotImplementedException($"Could not find any subclass implementations for class '{classID.ID}' at level {levelID}, but the level implementation '{IClassLevelType.FullName}' is marked abstract!");
                 Action<int[]> onPick = (int[] choiceIndices) => { AddChoicesForIClassLevel(levelTypeCandidates[choiceIndices[0]]!); };
                 Action<object> onDiscard = (choice) => { RemoveSubclassChoices((Type)choice); };
-                requiredChoices.Add(new ChoiceDescription((LevelChoicesAttribute<object?>)new LevelChoicesAttribute<Type>(1, 1, levelTypeCandidates!), "Subclass Choice", typeof(Type), onPick, onDiscard));
+                requiredChoices.Add(new ChoiceDescription((ChoiceCountAttribute<object?>)new LevelChoicesAttribute<Type>(1, 1, levelTypeCandidates!), "Subclass Choice", typeof(Type), onPick, onDiscard));
             }
             else
             {
@@ -79,9 +79,9 @@ namespace DnDSharp.Core
                 var ctor = ctors[0];
                 foreach (var param in ctor.GetParameters())
                 {
-                    var attrObj = (object?)param.GetCustomAttribute(typeof(LevelChoicesAttribute<>));
+                    var attrObj = (object?)param.GetCustomAttribute(typeof(ChoiceCountAttribute<>));
                     attrObj = attrObj?.GetType()?.GetMethod("op_Implicit", BindingFlags.Static | BindingFlags.Public)?.Invoke(null, [attrObj]);
-                    var attr = (LevelChoicesAttribute<object?>?)attrObj ?? throw new Exception($"Cannot generate ClassLevelGenerator for type '{IClassLevelType.FullName}'. Parameter {param.Name} of the level constructor is missing a 'LevelupChoicesAttribute'.");
+                    var attr = (ChoiceCountAttribute<object?>?)attrObj ?? throw new Exception($"Cannot generate ClassLevelGenerator for type '{IClassLevelType.FullName}'. Parameter {param.Name} of the level constructor is missing a 'LevelupChoicesAttribute'.");
                     requiredChoices.Add(new ChoiceDescription(attr, param.Name!, param.ParameterType, null, null));
                 }
             }
@@ -121,7 +121,7 @@ namespace DnDSharp.Core
             public Action<int[]>? OnPickChoice;
             public Action<object?>? OnDiscardChoice;
 
-            public ChoiceDescription(LevelChoicesAttribute<object?> attribute, string paramName, Type paramType, Action<int[]>? onPickChoice, Action<object?>? onDiscardChoice)
+            public ChoiceDescription(ChoiceCountAttribute<object?> attribute, string paramName, Type paramType, Action<int[]>? onPickChoice, Action<object?>? onDiscardChoice)
             {
                 ID = paramName;
                 this.minPicks = attribute.minPicks;

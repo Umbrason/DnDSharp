@@ -4,7 +4,6 @@ namespace DnDSharp.Vanilla
 {
     public partial class Champion
     {
-        [ClassLevel(3)]
         public new class Level3 : Fighter.Level3
         {
             public static FightingStyle[] FightingStyleOptions => Enum.GetValues<FightingStyle>();

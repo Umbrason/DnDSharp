@@ -1,6 +1,4 @@
-using DnDSharp.Core;
-
-namespace DnDSharp
+namespace DnDSharp.Core
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class ClassLevelAttribute(int level) : Attribute

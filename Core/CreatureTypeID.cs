@@ -1,4 +1,7 @@
-public class CreatureTypeID
+namespace DnDSharp.Core
 {
-    
+    public class CreatureTypeID
+    {
+
+    }
 }

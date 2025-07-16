@@ -27,7 +27,7 @@ namespace DnDSharp.Core
                                 .Where(type => type.GetInterfaces().Contains(typeof(IClassLevel))).ToArray();
             foreach (var IClassLevelType in qualifyingTypes)
             {
-                var levelAttribute = IClassLevelType.GetCustomAttribute<ClassLevelAttribute>();
+                var levelAttribute = IClassLevelType.GetBaseTypeImplementingInterface<IClassLevel>()!.GetCustomAttribute<ClassLevelAttribute>();
                 if (levelAttribute == null)
                 {
                     Trace.TraceWarning($"Level implementation for {IClassLevelType.FullName} cannot be registered! It is missing a ClassLevelAttribute.");

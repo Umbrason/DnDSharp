@@ -20,4 +20,13 @@ public static class ReflectionUtils
         value = (T)memberReturnValue;
         return true;
     }
+
+    public static Type? GetBaseTypeImplementingInterface<I>(this Type? type)
+    {
+        if (!typeof(I).IsInterface) throw new Exception($"Invalid generic parameter 'I'. Type '{typeof(I).Name}' is not an interface!");
+
+        while (type?.BaseType != null && type.BaseType.GetInterfaces().Contains(typeof(I)))
+            type = type.BaseType;
+        return type;
+    }
 }

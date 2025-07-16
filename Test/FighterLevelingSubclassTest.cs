@@ -40,6 +40,7 @@ namespace DnDSharp.Test
                 else throw new Exception($"Failed to create level {i} for Fighter");
             }
             var fighterLevels = character.ClassLevels[Class.Fighter];
+            var classID = character.ClassLevels[Class.Fighter][2].GetType();
             Console.WriteLine($"[{string.Join(", ", fighterLevels.Select(level => level.GetType().FullName))}]");
         }
     }

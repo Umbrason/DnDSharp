@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DnDSharp.Vanilla", "Vanilla
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DnDSharp.Test", "Test/Test.csproj", "{4E13CA92-5320-4270-88CE-A5ABF2353517}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DnDSharp.DnDAnalyzer", "Analyzer/DnDAnalyzer.csproj", "{7B31D653-A8A3-4539-857B-67C98D37DBB7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{4E13CA92-5320-4270-88CE-A5ABF2353517}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E13CA92-5320-4270-88CE-A5ABF2353517}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E13CA92-5320-4270-88CE-A5ABF2353517}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B31D653-A8A3-4539-857B-67C98D37DBB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B31D653-A8A3-4539-857B-67C98D37DBB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B31D653-A8A3-4539-857B-67C98D37DBB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B31D653-A8A3-4539-857B-67C98D37DBB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

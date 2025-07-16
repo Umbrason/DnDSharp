@@ -4,10 +4,9 @@ namespace DnDSharp.Vanilla
 {
     public partial class Fighter
     {
+        [ClassLevel(3)]
         public abstract class Level3 : IClassLevel
         {
-            public static ClassID ClassID => Class.Fighter;
-            public static int LevelID => 3;
             public virtual void OnAdded(Character character) { }
             public virtual void OnRemoved(Character character) { }
         }

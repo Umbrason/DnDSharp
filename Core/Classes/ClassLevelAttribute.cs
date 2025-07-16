@@ -1,3 +1,5 @@
+using DnDSharp.Core;
+
 namespace DnDSharp
 {
     [AttributeUsage(AttributeTargets.Class)]

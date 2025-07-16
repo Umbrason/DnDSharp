@@ -7,7 +7,6 @@ namespace DnDSharp.Vanilla
         [ClassLevel(1)]
         public class Level1 : IClassLevel
         {
-            public static ClassID ClassID => Class.Fighter;
             public ActivityGroupID ActivityGroup => new(nameof(Level1), Fighter.ActivityGroup);
             public IActivity[] Activities = [];
             public void OnAdded(Character character)

@@ -1,9 +1,11 @@
+using System.Reflection;
+
 namespace DnDSharp.Core
 {
     public interface IClassLevel
     {
-        ClassID ClassID => (ClassID)this.GetType().GetProperty(nameof(ClassID), System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.FlattenHierarchy)?.GetMethod?.Invoke(null, [])!;
-        int LevelID => (int)this.GetType().GetProperty(nameof(LevelID), System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.FlattenHierarchy)?.GetMethod?.Invoke(null, [])!;
+        ClassID ClassID => this.GetType().DeclaringType!.GetFieldOrPropertyValueOrDefault<ClassID>(nameof(ClassID), BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy)!;
+        int LevelID => this.GetType().GetCustomAttribute<ClassLevelAttribute>()!.LevelID;
         void OnAdded(Character character);
         void OnRemoved(Character character);
     }

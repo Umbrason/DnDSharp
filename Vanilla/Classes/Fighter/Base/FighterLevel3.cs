@@ -7,8 +7,14 @@ namespace DnDSharp.Vanilla
         [ClassLevel(3)]
         public abstract class Level3 : IClassLevel
         {
-            public virtual void OnAdded(Character character) { }
-            public virtual void OnRemoved(Character character) { }
+            public virtual void OnAdded(Character character)
+            {
+
+            }
+            public virtual void OnRemoved(Character character)
+            {
+
+            }
         }
     }
 }

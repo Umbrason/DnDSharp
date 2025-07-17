@@ -4,8 +4,8 @@ namespace DnDSharp.Vanilla
 {
     public partial class Champion
     {
-        [ClassLevel(3)]
-        public new class Level3 : Fighter.Level3
+        [ClassLevel(18)]
+        public new class Level18 : Fighter.Level18
         {
             public override void OnAdded(Character character)
             {

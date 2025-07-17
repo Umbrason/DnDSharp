@@ -6,14 +6,14 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace DnDSharp.Analyzer
 {
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class IClassLevelDeclaringClassHasClassID : DiagnosticAnalyzer
+
+    public class IClassLevelDeclaringClassHasClassID : ISubAnalyzer
     {
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(new DiagnosticDescriptor[]{
+        public ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(new DiagnosticDescriptor[]{
         Rule
     });
         private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor("DNDSHARP1003", "IClassLevel enclosing class is missing a public static ClassID field", "IClassLevel implementations must always be inside of an enclosing class with a public static ClassID field", "", DiagnosticSeverity.Error, true);
-        public override void Initialize(AnalysisContext context)
+        public void Initialize(AnalysisContext context)
         {
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.ReportDiagnostics);
             context.EnableConcurrentExecution();

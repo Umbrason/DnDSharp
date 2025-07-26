@@ -84,17 +84,17 @@ namespace DnDSharp.Core
         #endregion
 
         #region Combat
-        public void BeginTurn() => OnBeginTurn?.Invoke();
-        public event Action? OnBeginTurn;
-        public void EndTurn() => OnEndTurn?.Invoke();
-        public event Action? OnEndTurn;
+        public void BeginTurn() => OnBeginTurn?.Invoke(default);
+        public ReactableEvent<IReactionContext.NONE> OnBeginTurn;
+        public void EndTurn() => OnEndTurn?.Invoke(default);
+        public ReactableEvent<IReactionContext.NONE> OnEndTurn;
         #endregion
 
         #region Resting 
-        public void ShortRest() => OnShortRest?.Invoke();
-        public event Action? OnShortRest;
-        public void LongRest() => OnLongRest?.Invoke();
-        public event Action? OnLongRest;
+        public void ShortRest() => OnShortRest?.Invoke(default);
+        public ReactableEvent<IReactionContext.NONE> OnShortRest;
+        public void LongRest() => OnLongRest?.Invoke(default);
+        public ReactableEvent<IReactionContext.NONE> OnLongRest;
         #endregion
 
         #region Dice Rolling

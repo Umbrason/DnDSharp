@@ -1,0 +1,6 @@
+Refactor everything to work with a Operation/Event based pattern.
+Events get funneled through a centralized Channel so everyone can react to anything thats going on.
+
+Concrete shit this refactor affects => 
+- no events/actions in Character.cs
+- centralized event channel in some CS-class, ~~maybe combat?~~ no do some kind of event channel/world/whatever class that can also function as a log

@@ -1,4 +1,6 @@
 //A thing a character can do, that manipulates its/others state
+using System.Collections;
+
 namespace DnDSharp.Core
 {
     public interface IActivity
@@ -6,6 +8,6 @@ namespace DnDSharp.Core
         Character Owner { get; set; }
         bool CanUse { get; }
         ActivityParameterDescriptor[] Parameters { get; }
-        void DoUse(Dictionary<ActivityParameterDescriptor, object[]> arguments);
+        IEnumerator Execute(Dictionary<ActivityParameterDescriptor, object[]> arguments);
     }
 }

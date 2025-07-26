@@ -1,9 +1,9 @@
 namespace DnDSharp.Core
 {
-    public struct DiceRollContext
+    public readonly struct DiceRollContext
     {
         public readonly Character character;
-        public bool higherIsBetter;
+        public readonly bool higherIsBetter;
 
         public DiceRollContext(Character character, bool higherIsBetter)
         {

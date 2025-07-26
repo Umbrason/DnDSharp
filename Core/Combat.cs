@@ -10,7 +10,6 @@ namespace DnDSharp.Core
         }
 
         public Character? ActiveCharacter { get; private set; }
-
         private readonly SortedDictionary<int, List<Character>> InitiativeOrder = [];
 
         struct InitiativePtr(int initiativeGroup, int groupIndex)

@@ -8,8 +8,6 @@ namespace DnDSharp.Core
         ITimelineEvent[] History;
         ReactableEvent<ITimelineEvent>? OnAnyEvent;
         public ITimelineEvent CurrentEvent { get; }
-
-
         
         /*Melee Attack              Timeline                 Hellish Rebuke
                                 BeginEventFrame
@@ -24,7 +22,37 @@ namespace DnDSharp.Core
         
         */
         
+/* 
+        Fireball    CounterSpellA   CounterSpellB   CounterSpellC
         
+        BEGIN
+        
+                        BEGIN
+                                        BEGIN
+
+                                        Negate
+
+                                        END
+
+                                                        BEGIN
+
+                                                        Negate
+
+                                                        END
+                        
+                        ~N~e~g~a~t~e~
+                         was negated
+
+                        END
+    
+        Roll Damage
+        
+        Roll Dex Saves
+
+        Deal Damage According to Saves
+
+        END
+         */
         
         
         
@@ -34,13 +62,8 @@ namespace DnDSharp.Core
         
         Stack<EventFrame> EventFrameStack;
         public struct EventFrame {
-            
+            IEnumerator<TimelineEvent> Executor;
         }
 
-        private IEnumerator<Dictionary<Character, IReaction>> CurrentEventExecutor;
-    }
-    public interface ITimelineEvent
-    {
-        IEnumerator<ITimelineEvent> Executor { get; }
     }
 }
